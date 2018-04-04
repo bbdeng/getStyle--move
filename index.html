@@ -24,18 +24,59 @@
 				left: 800px;
 				top: 0;
 			}
+			
+			#box2 {
+				width: 100px;
+				height: 100px;
+				background-color: gold;
+				position: absolute;
+				left: 0;
+				top: 200px;
+			}
+			
+			#box3 {
+				width: 100px;
+				height: 100px;
+				background-color: mistyrose;
+				position: absolute;
+				left: 0;
+				top: 350px;
+			}
 		</style>
+		<script type="text/javascript" src="js/getStyle.js"></script>
+		<script type="text/javascript" src="js/move.js"></script>
+		
 		<script type="text/javascript">
 			window.onload=function(){
 				var btn01=document.getElementById("btn01");
 				var btn02=document.getElementById("btn02");
+				var btn03=document.getElementById("btn03");
+				var btn04=document.getElementById("btn04");
 				var box=document.getElementById("box");
+				
 				//定义一个变量用来保存定时器的标识
 				btn01.onclick=function(){
-					move (box,800, 10);
+					move (box,"left",800, 10);
 				};
 				btn02.onclick=function(){
-					move (box,0, 10);
+					move (box,"left",0, 10);
+				};
+				
+				btn03.onclick=function(){
+					move (box2,"left",800, 20);
+				};
+				btn04.onclick=function(){
+					move (box3,"left",800, 20,function(){
+						move (box3,"height",10, 10,function(){
+							move (box3,"top",500, 20,function(){
+								move (box3,"width",900, 15,function(){
+									move (box3,"height",800, 20,function(){
+										move (box3,"left",0, 30);
+									});
+								});
+							});
+						});
+					});
 				};
 				
 				
@@ -43,76 +84,18 @@
 				
 				
 			};
-			//创建一个执行简单动画的函数
-			//obj定义需要执行动画的对象
-			
-			//speed动画移动的速度 填写正值即可
-			var timer;
-			function move(obj,target,speed){
-				
-					//每次单击触发动画都关闭一次计时器，不让计时器重叠加速
-					clearInterval(timer);
-					//通过原始元素的位置和目标位置相比较，判断出speed的值是正值还是负值
-					//如果原始的位置在目标位置的左侧，这speed应该为正值不进行改变；反则speed应该变成负值
-					var current=parseInt(getStyle(obj,"left"));
-					if (current>target){
-						speed = -speed;
-					};
-					//开启定时器来执行动画效果
-					timer=setInterval(function(){
-						//获取box的原来的left值
-						var oldValue=parseInt(getStyle(obj,"left"));
-						//修改后的left新值
-						var newValue=oldValue+speed;
-						
-						if(speed>0&&newValue>target ||speed<0 && newValue<target){
-							newValue=target;
-						};
-						
-						obj.style.left=newValue+"px";
-						
-						//当元素移动到800px的时候让他停止
-						if(newValue==target){
-							clearInterval(timer);
-						};
-					
-					},30);
-				
-				
-				
-			};
 			
 			
 			
-			//读取当前样式的方法
-			//obj需要获取那个对象
-			//name需要获取该对象的样式名字
 			
-			function getStyle(obj,name){
-			  	//获取样式的2种方法
-			  	//1.getComputedStyle(①,②)["样式名"];
-			  	//该方法适用于正常的浏览器并且是window的方法可以直接使用
-			  	//需要2个参数，①为需要获取样式的元素，②可以传递一个伪元素，一般都未null
-			  	//该方法返回一个对象，对象其中包含了当前元素的样式，需要获取那个样式需要在后面添加  .样式名
-			  	//和下面方法的区别：如果元素没有设置默认样式，获取到的是真实的值，而不是默认的样式
-			  	//2.元素.currentStyle.样式名
-			  	//该方法用来读取当前正在显示的样式，注意该方法如果当前元素没有设置样式，则获取他的默认值
-			  	//cunrrentStyle这个方法只有在IE中支持
-			  	  if (window.getComputedStyle){ //这里的window必须写 因为在IE8中没有该对象，未被定义是一个变量，变量没有会报错，属性没有只会返回undefined
-			  	  	return getComputedStyle(obj,null)[name]; //这里的.name不行，因为.name表示获取到.name样式，写死了
-			  	  }else{
-			  	  	return obj.currentStyle[name];
-			  	  };
-			  	
-			  	
-			  	
-			  };
 			
 		</script>
 	</head>
 	<body>
 		<button id="btn01">点击按钮以后box向右移动</button>
 		<button id="btn02">点击按钮以后box向左移动</button>
+		<button id="btn03">点击按钮以后box2向右移动</button>
+		<button id="btn04">连续动画</button>
 		<br />
 		<br />
 		
@@ -120,6 +103,12 @@
 			
 		</div>
 		 <div id="box1">
+		 	
+		 </div>
+		 <div id="box2">
+		 	
+		 </div>
+		 <div id="box3">
 		 	
 		 </div>
 	</body>
