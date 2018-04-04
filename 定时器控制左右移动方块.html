@@ -31,39 +31,53 @@
 				var btn02=document.getElementById("btn02");
 				var box=document.getElementById("box");
 				//定义一个变量用来保存定时器的标识
-				var timer;
 				btn01.onclick=function(){
-					clearInterval(timer);
-					//开启定时器来执行动画效果
-					timer=setInterval(function(){
-						//获取box的原来的left值
-						var oldValue=parseInt(getStyle(box,"left"));
-						//修改后的left新值
-						var newValue=oldValue+11;
-						
-						if(newValue>800){
-							newValue=800;
-						};
-						
-						box.style.left=newValue+"px";
-						
-						//当元素移动到800px的时候让他停止
-						if(newValue==800){
-							clearInterval(timer);
-						};
-					
-					},30);
-					
-					
-					
+					move (box,800, 10);
 				};
+				btn02.onclick=function(){
+					move (box,0, 10);
+				};
+				
 				
 				
 				
 				
 			};
 			//创建一个执行简单动画的函数
-			function move(){
+			//obj定义需要执行动画的对象
+			
+			//speed动画移动的速度 填写正值即可
+			var timer;
+			function move(obj,target,speed){
+				
+					//每次单击触发动画都关闭一次计时器，不让计时器重叠加速
+					clearInterval(timer);
+					//通过原始元素的位置和目标位置相比较，判断出speed的值是正值还是负值
+					//如果原始的位置在目标位置的左侧，这speed应该为正值不进行改变；反则speed应该变成负值
+					var current=parseInt(getStyle(obj,"left"));
+					if (current>target){
+						speed = -speed;
+					};
+					//开启定时器来执行动画效果
+					timer=setInterval(function(){
+						//获取box的原来的left值
+						var oldValue=parseInt(getStyle(obj,"left"));
+						//修改后的left新值
+						var newValue=oldValue+speed;
+						
+						if(speed>0&&newValue>target ||speed<0 && newValue<target){
+							newValue=target;
+						};
+						
+						obj.style.left=newValue+"px";
+						
+						//当元素移动到800px的时候让他停止
+						if(newValue==target){
+							clearInterval(timer);
+						};
+					
+					},30);
+				
 				
 				
 			};
